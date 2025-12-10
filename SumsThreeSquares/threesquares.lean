@@ -431,8 +431,9 @@ lemma exists_lattice_point_in_ball (m q : ℕ) (t b : ℤ) (hm : 0 < m) (hq : 0 
     field_simp
     ring_nf
     have : (m : ℝ) * √(m : ℝ) = (m : ℝ) ^ (3 / 2 : ℝ) := by
-
-      sorry
+      rw [Real.rpow_div_two_eq_sqrt, (by norm_num : (3  : ℝ) = 2 + 1), Real.rpow_add]
+      simp only [Real.rpow_ofNat, Nat.cast_nonneg, Real.sq_sqrt, Real.rpow_one]
+      all_goals positivity
     rw [this, Real.mul_rpow, mul_comm π, mul_assoc, mul_assoc, mul_lt_mul_iff_right₀];
     · rw [← pow_lt_pow_iff_left₀ (n := 2)]
       · norm_num1
