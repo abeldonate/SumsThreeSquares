@@ -1,7 +1,6 @@
-import Mathlib.Tactic.Cases
 import Mathlib.MeasureTheory.Group.GeometryOfNumbers
 import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace
-import SumsThreeSquares.volumehypercube
+--import SumsThreeSquares.volumehypercube
 
 open MeasureTheory Module Submodule
 
@@ -153,7 +152,13 @@ theorem classical_exists_ne_zero_mem_lattice_of_measure_mul_two_pow_lt_measure
         simp [g, ← hm, this]
 
   -- The measure of F is 1
-  have hF : volume F = 1 := volume_F
+  have hF : volume F = 1 := by
+    have h_volume : MeasureTheory.volume (Set.pi Set.univ fun _ : Fin n => Set.Ico (0 : ℝ) 1) = 1 := by
+      erw [ Real.volume_pi_Ico ] ; norm_num;
+    convert h_volume using 1;
+    convert ( EuclideanSpace.volume_preserving_measurableEquiv ( Fin n ) |> MeasureTheory.MeasurePreserving.measure_preimage ) _;
+    · exact rfl;
+    · exact MeasurableSet.nullMeasurableSet ( by exact MeasurableSet.univ_pi fun _ => measurableSet_Ico )
 
   -- The finite rank of ℝ^n is n
   have hrank : finrank ℝ E = n := by
@@ -179,3 +184,5 @@ theorem classical_exists_ne_zero_mem_lattice_of_measure_mul_two_pow_lt_measure
   intro i
   -- x is in the lattice L by definition
   exact x.property i
+
+#min_imports
