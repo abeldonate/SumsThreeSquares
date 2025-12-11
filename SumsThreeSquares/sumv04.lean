@@ -666,7 +666,21 @@ lemma exists_lattice_xyz (m q : ℕ) (t b : ℤ) (h : ℤ) (hm : 0 < m) (hq : 0 
   have hk_lt_2 : k < 2 := by
     have h1 : (2 * ↑t * ↑q * ↑x + ↑t * ↑b * ↑y + ↑m * ↑z : ℝ) ^ 2 + 2 * (↑q * ↑x ^ 2 + ↑b * ↑x * ↑y + ↑h * ↑y ^ 2) < 2 * m := by
       convert hRST using 1
-      sorry -- This needs the equality R^2 + S^2 + T^2 = R^2 + 2*(quadratic form)
+      -- Need: R^2 + S^2 + T^2 = R^2 + 2*(q*x^2 + b*x*y + h*y^2)
+      -- i.e., S^2 + T^2 = 2*(q*x^2 + b*x*y + h*y^2)
+      have hsqrt_2q_pos : Real.sqrt (2 * q) ≠ 0 := by positivity
+      have hsqrt_2q_sq : Real.sqrt (2 * q) ^ 2 = 2 * q := Real.sq_sqrt (by positivity)
+      have hsqrt_m_sq : Real.sqrt m ^ 2 = m := Real.sq_sqrt (by positivity : (0 : ℝ) ≤ m)
+      have hb2 : (b : ℝ)^2 = 4 * q * h - m := by
+        have h1 : (b : ℤ) ^ 2 = 4 * q * h - m := by linarith [hbqm]
+        exact_mod_cast h1
+      have hb2' : (b : ℝ)^2 + m = 4 * q * h := by linarith [hb2]
+      simp only [add_assoc]
+      congr 1
+      field_simp
+      rw [hsqrt_2q_sq, hsqrt_m_sq]
+      ring_nf
+      nlinarith [sq_nonneg (x : ℝ), sq_nonneg (y : ℝ), hb2', hb2]
     rw [hkm] at h1
     have hm_pos : (0 : ℝ) < m := by exact_mod_cast hm
     have : (k : ℝ) * m < 2 * m := h1
@@ -675,9 +689,5 @@ lemma exists_lattice_xyz (m q : ℕ) (t b : ℤ) (h : ℤ) (hm : 0 < m) (hq : 0 
 
   -- So k ∈ {0, 1}
   interval_cases k
-  · -- Case k = 0: R^2 + S^2 + T^2 = 0
-    -- This means R = S = T = 0
-    -- We need to show this contradicts (x,y,z) ≠ (0,0,0)
-    exfalso
-    sorry
+  · sorry
   · sorry
