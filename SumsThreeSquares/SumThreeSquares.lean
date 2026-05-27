@@ -892,4 +892,11 @@ theorem blueprint_case_mod8_eq3 (m : ℕ) (hm_sq : Squarefree m) (hm_pos : 0 < m
         = a ^ 2 + b ^ 2 + c ^ 2 := by
           norm_num [Int.natCast_natAbs, sq_abs]
     _ = (m : ℤ) := by simpa using habc.symm
+
+/-- If `m` is a positive integer not of the form `4^a * (8n + 7)`, then `m` is
+the sum of three squares. -/
+theorem sum_three_squares :
+    ∀ (m : ℕ), 0 < m → (¬ ∃ a n : ℕ, m = 4^a * (8*n + 7)) → IsSumOfThreeSquares m := by
+  sorry
+
 end
